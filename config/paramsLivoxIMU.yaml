@@ -29,7 +29,7 @@ lio_sam:
   Horizon_SCAN: 6000                          # lidar horizontal resolution (Velodyne:1800, Ouster:512,1024,2048, Livox Horizon: 4000)
   downsampleRate: 1                           # default: 1. Downsample your data if too many points. i.e., 16 = 64 / 4, 16 = 16 / 1
   lidarMinRange: 1.0                          # default: 1.0, minimum lidar range to be used
-  lidarMaxRange: 40.0                       # default: 1000.0, maximum lidar range to be used
+  lidarMaxRange: 100.0                       # default: 1000.0, maximum lidar range to be used
   
   # IMU Settings
   imuType: 0                               #0: 6-axis imu  1:9-axis imu 注意使用六轴IMU时默认使用MID360内置的IMU数据，加速度单位为g，后续处理中会将这一值乘以重力加速度，恢复为m/s^2
@@ -40,7 +40,9 @@ lio_sam:
   imuGravity: 9.8035
   imuRPYWeight: 0.00
 
-  extrinsicTrans: [0.0, 0.0, 0]
+# imu->lidar的外参
+  # extrinsicTrans: [0.0, 0.0, 0]
+  extrinsicTrans: [0.011, 0.02329, -0.04412]
   extrinsicRot: [1, 0, 0,
                   0, 1, 0,
                   0, 0, 1]
@@ -64,7 +66,7 @@ lio_sam:
   rotation_tollerance: 1000                     # radians
 
   # CPU Params
-  numberOfCores: 4                              # number of cores for mapping optimization
+  numberOfCores: 6                              # number of cores for mapping optimization
   mappingProcessInterval: 0.15                  # seconds, regulate mapping frequency
 
   # Surrounding map

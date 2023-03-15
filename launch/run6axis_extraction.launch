@@ -1,0 +1,25 @@
+<launch>
+
+    <arg name="project" default="lio_sam"/>
+
+    <!-- 指定打印输出的日志等级 -->
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find lio_sam)/launch/include/rosconsole/rosconsole_error.conf"/>
+    
+    <!-- Parameters -->
+    <rosparam file="$(find lio_sam)/config/paramsLivoxIMU.yaml" command="load" />
+
+    <!--- 特征提取 -->
+    <node pkg="$(arg project)" type="$(arg project)_point_full_pub"   name="$(arg project)_point_full_pub"    output="screen"     respawn="true"/>
+    <node pkg="$(arg project)" type="$(arg project)_featureExtraction"   name="$(arg project)_featureExtraction"    output="screen"     respawn="true"/>
+
+
+    <!--- Robot State TF -->
+    <!-- <include file="$(find lio_sam)/launch/include/module_robot_state_publisher.launch" /> -->
+
+    <!--- Run Navsat -->
+    <!-- <include file="$(find lio_sam)/launch/include/module_navsat.launch" /> -->
+
+    <!--- Run Rviz-->
+    <node pkg="rviz" type="rviz" name="$(arg project)_rviz" args="-d $(find lio_sam)/launch/include/config/point_extraction.rviz" />
+
+</launch>
