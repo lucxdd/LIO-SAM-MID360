@@ -1,7 +1,11 @@
 # ZH
-
-
-
+<!-- 单独跑特征提取(不去畸变，只需要点云话题) -->
+roslaunch lio_sam run6axis_extraction.launch
+<!-- 运行lio_sam -->
+roslaunch lio_sam run6axis.launch
+<!-- 保存轨迹的话题 -->
+/lio_sam/mapping/odometry
+<!-- 会自动保存地图，路径：./PCD/ -->
 --------------------------------------------------------------------------------------------------
 # LIO-SAM-MID360
 

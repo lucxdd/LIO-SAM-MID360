@@ -1447,7 +1447,7 @@ public:
             initialEstimate.insert(cloudKeyPoses3D->size(), poseTo);
         }
     }
-
+    // TODO: 优化GPS添加策略
     void addGPSFactor()
     {
         if (gpsQueue.empty())

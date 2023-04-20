@@ -32,4 +32,11 @@
     <origin xyz="0 0 0" rpy="0 0 0" />
   </joint>
 
+  <link name="livox_frame"> </link>
+  <joint name="livox_frame_joint" type="fixed">
+    <parent link="chassis_link" />
+    <child link="livox_frame" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
 </robot>

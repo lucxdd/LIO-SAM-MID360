@@ -3,9 +3,10 @@ lio_sam:
 
   # Topics
   pointCloudTopic: "livox/lidar"               # Point cloud data
-  imuTopic: "livox/imu"                         # IMU data
+  imuTopic: "livox/imu"                       # IMU data
+  # imuTopic: "imu_correct"
   odomTopic: "odometry/imu"                   # IMU pre-preintegration odometry, same frequency as IMU
-  gpsTopic: "odometry/gpsz"                   # GPS odometry topic from navsat, see module_navsat.launch file
+  gpsTopic: "ins_odo"                  # GPS odometry topic from navsat, see module_navsat.launch file
 
   # Frames
   lidarFrame: "base_link"
@@ -14,14 +15,14 @@ lio_sam:
   mapFrame: "map"
 
   # GPS Settings
-  useImuHeadingInitialization: false           # if using GPS data, set to "true"
-  useGpsElevation: false                      # if GPS elevation is bad, set to "false"
-  gpsCovThreshold: 2.0                        # m^2, threshold for using GPS data
-  poseCovThreshold: 25.0                      # m^2, threshold for using GPS data
+  useImuHeadingInitialization: true           # if using GPS data, set to "true"
+  useGpsElevation: true                      # if GPS elevation is bad, set to "false"
+  gpsCovThreshold: 0.01                        # m^2, threshold for using GPS data
+  poseCovThreshold: 10.0                      # m^2, threshold for using GPS data
   
   # Export settings
   savePCD: true                              # https://github.com/TixiaoShan/LIO-SAM/issues/3
-  savePCDDirectory: "/Downloads/LOAM/"        # in your home folder, starts and ends with "/". Warning: the code deletes "LOAM" folder then recreates it. See "mapOptimization" for implementation
+  savePCDDirectory: "/catkin_ws/src/LIO-SAM-MID360/PCD/"        # in your home folder, starts and ends with "/". Warning: the code deletes "LOAM" folder then recreates it. See "mapOptimization" for implementation
 
   # Sensor Settings
   sensor: livox                            # lidar sensor type, 'velodyne' or 'ouster' or 'livox'
@@ -40,9 +41,9 @@ lio_sam:
   imuGravity: 9.8035
   imuRPYWeight: 0.00
 
-# imu->lidar的外参
-  # extrinsicTrans: [0.0, 0.0, 0]
-  extrinsicTrans: [0.011, 0.02329, -0.04412]
+  # imu->lidar的外参
+  # mid360
+  extrinsicTrans: [-0.011, -0.02329, 0.04412]
   extrinsicRot: [1, 0, 0,
                   0, 1, 0,
                   0, 0, 1]
@@ -66,7 +67,7 @@ lio_sam:
   rotation_tollerance: 1000                     # radians
 
   # CPU Params
-  numberOfCores: 6                              # number of cores for mapping optimization
+  numberOfCores: 8                              # number of cores for mapping optimization
   mappingProcessInterval: 0.15                  # seconds, regulate mapping frequency
 
   # Surrounding map
@@ -94,7 +95,7 @@ lio_sam:
 
 # Navsat (convert GPS coordinates to Cartesian)
 navsat:
-  frequency: 50
+  frequency: 100
   wait_for_datum: false
   delay: 0.0
   magnetic_declination_radians: 0
@@ -112,7 +113,7 @@ ekf_gps:
   base_link_frame: base_link
   world_frame: odom
 
-  frequency: 50
+  frequency: 100
   two_d_mode: false
   sensor_timeout: 0.01
   # -------------------------------------
@@ -131,7 +132,7 @@ ekf_gps:
   # -------------------------------------
   # Odometry (From Navsat):
   # -------------------------------------
-  odom0: odometry/gps
+  odom0: ins_odo
   odom0_config: [true,  true,  true,
                  false, false, false,
                  false, false, false,
