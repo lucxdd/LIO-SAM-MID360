@@ -4,8 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /links1
-        - /Odometry1
+        - /Global Options1
         - /Point Cloud1/Velodyne1
         - /Feature Cloud1/Edge Feature1
         - /Mapping1
@@ -394,7 +393,7 @@ Visualization Manager:
           Head Length: 0.20000000298023224
           Length: 0.30000001192092896
           Line Style: Billboards
-          Line Width: 0.10000000149011612
+          Line Width: 0.5
           Name: Path (global)
           Offset:
             X: 0
@@ -474,13 +473,13 @@ Visualization Manager:
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
-      Color: 25; 255; 0
+      Color: 255; 85; 255
       Enabled: true
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
       Line Style: Billboards
-      Line Width: 0.30000001192092896
+      Line Width: 0.4000000059604645
       Name: Path
       Offset:
         X: 0
@@ -540,7 +539,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 541.4226684570312
+      Distance: 241.95297241210938
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -548,9 +547,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -53.952056884765625
-        Y: 92.9031753540039
-        Z: -121.66116333007812
+        X: 9.869767189025879
+        Y: -12.73047924041748
+        Z: -105.82772064208984
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false

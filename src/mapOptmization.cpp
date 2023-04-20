@@ -402,28 +402,54 @@ public:
           *globalSurfCloud   += *transformPointCloud(surfCloudKeyFrames[i],    &cloudKeyPoses6D->points[i]);
           cout << "\r" << std::flush << "Processing feature cloud " << i << " of " << cloudKeyPoses6D->size() << " ...";
       }
-
-      if(req.resolution != 0)
-      {
-        cout << "\n\nSave resolution: " << req.resolution << endl;
-
-        // down-sample and save corner cloud
-        downSizeFilterCorner.setInputCloud(globalCornerCloud);
-        downSizeFilterCorner.setLeafSize(req.resolution, req.resolution, req.resolution);
-        downSizeFilterCorner.filter(*globalCornerCloudDS);
-        pcl::io::savePCDFileBinary(saveMapDirectory + "/CornerMap.pcd", *globalCornerCloudDS);
-        // down-sample and save surf cloud
-        downSizeFilterSurf.setInputCloud(globalSurfCloud);
-        downSizeFilterSurf.setLeafSize(req.resolution, req.resolution, req.resolution);
-        downSizeFilterSurf.filter(*globalSurfCloudDS);
-        pcl::io::savePCDFileBinary(saveMapDirectory + "/SurfMap.pcd", *globalSurfCloudDS);
+      //   TODO: 保存位姿
+      double start_time = cloudKeyPoses6D->points[0].time;
+      fstream pose_file;
+      pose_file.open("/home/zh/catkin_ws/src/LIO-SAM-MID360/PCD/pose6D.txt",
+                     ios::in | ios::out | ios::trunc);
+      if (!pose_file.is_open()) cout << "打开文件失败" << endl;
+      for (int i = 0; i < (int)cloudKeyPoses3D->size(); i++) {
+          // 转换为四元数
+          Eigen::Quaterniond q = Eigen::Quaterniond::Identity();
+          q = Eigen::AngleAxisd((cloudKeyPoses6D->points[i].yaw),
+                                Eigen::Vector3d::UnitZ()) *
+              Eigen::AngleAxisd((cloudKeyPoses6D->points[i].pitch),
+                                Eigen::Vector3d::UnitY()) *
+              Eigen::AngleAxisd((cloudKeyPoses6D->points[i].roll),
+                                Eigen::Vector3d::UnitX());
+          // 输出四元数
+          pose_file << cloudKeyPoses6D->points[i].time - start_time << " "
+                    << cloudKeyPoses6D->points[i].x << " "
+                    << cloudKeyPoses6D->points[i].y << " "
+                    << cloudKeyPoses6D->points[i].z << " " << q.x() << " "
+                    << q.y() << " " << q.z() << " " << q.w() << endl;
       }
-      else
-      {
-        // save corner cloud
-        pcl::io::savePCDFileBinary(saveMapDirectory + "/CornerMap.pcd", *globalCornerCloud);
-        // save surf cloud
-        pcl::io::savePCDFileBinary(saveMapDirectory + "/SurfMap.pcd", *globalSurfCloud);
+      pose_file.close();
+
+      if (req.resolution != 0) {
+          cout << "\n\nSave resolution: " << req.resolution << endl;
+
+          // down-sample and save corner cloud
+          downSizeFilterCorner.setInputCloud(globalCornerCloud);
+          downSizeFilterCorner.setLeafSize(req.resolution, req.resolution,
+                                           req.resolution);
+          downSizeFilterCorner.filter(*globalCornerCloudDS);
+          pcl::io::savePCDFileBinary(saveMapDirectory + "/CornerMap.pcd",
+                                     *globalCornerCloudDS);
+          // down-sample and save surf cloud
+          downSizeFilterSurf.setInputCloud(globalSurfCloud);
+          downSizeFilterSurf.setLeafSize(req.resolution, req.resolution,
+                                         req.resolution);
+          downSizeFilterSurf.filter(*globalSurfCloudDS);
+          pcl::io::savePCDFileBinary(saveMapDirectory + "/SurfMap.pcd",
+                                     *globalSurfCloudDS);
+      } else {
+          // save corner cloud
+          pcl::io::savePCDFileBinary(saveMapDirectory + "/CornerMap.pcd",
+                                     *globalCornerCloud);
+          // save surf cloud
+          pcl::io::savePCDFileBinary(saveMapDirectory + "/SurfMap.pcd",
+                                     *globalSurfCloud);
       }
 
       // save global point cloud map
@@ -1557,7 +1583,8 @@ public:
         addOdomFactor();
 
         // gps factor
-        addGPSFactor();
+        if (useGPS)
+            addGPSFactor();
 
         // loop factor
         addLoopFactor();
