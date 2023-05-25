@@ -1482,11 +1482,11 @@ public:
         // wait for system initialized and settles down
         if (cloudKeyPoses3D->points.empty())
             return;
-        else
-        {
-            if (pointDistance(cloudKeyPoses3D->front(), cloudKeyPoses3D->back()) < 5.0)
-                return;
-        }
+        // else
+        // {
+        //     if (pointDistance(cloudKeyPoses3D->front(), cloudKeyPoses3D->back()) < 5.0)
+        //         return;
+        // }
 
         // pose covariance small, no need to correct
         if (poseCovariance(3,3) < poseCovThreshold && poseCovariance(4,4) < poseCovThreshold)
